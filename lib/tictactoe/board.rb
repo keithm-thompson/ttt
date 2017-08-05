@@ -8,7 +8,7 @@ class Board
     @available_spots = Set.new
     initialize_spot_set!
   end
-  
+
   def [](row, col)
     @grid[row][col]
   end
@@ -19,11 +19,11 @@ class Board
 
   def mark(point, value)
     @grid[point[0], point[1]] = value
+    remove_point_from_availabilities(point)
   end
 
-
   def valid_move?(move)
-    self.get(move).zero?
+    @available_spots.include?(move)
   end
 
   def print
@@ -41,6 +41,14 @@ class Board
   end
 
   def initialize_spot_set
-    # STUB OUT
+    for i in 0...@grid.length
+      for j in 0...@grid.length
+        @available_spots.add([i,j])
+      end
+    end
+  end
+
+  def remove_point_from_availabilities(point)
+    @available_spots.delete(point)
   end
 end

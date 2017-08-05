@@ -2,7 +2,12 @@ require_relative './board.rb'
 require_relative './players/human_player.rb'
 require_relative './players/computer_player.rb'
 
-# EXPLAIN WIN CONDITION
+# I have mapped the values of the marks to either -1 or 1 to make checking for a
+# win condition easier. Instead of iterating through the board and seeing
+# if every space is occupied by the same mark, I will simply keep track
+# of the sums of each row, col and the two diagonals. If at any point
+# the absolute value of the sum is equal to the length of the grid, that
+# satisfies a win condition
 
 class Game
   MARKS_TO_VALUES = {
@@ -29,7 +34,7 @@ class Game
       col_sums: Array.new(grid_len, 0),
       diag_sums: { back_slash: 0, forward_slash: 0}
     }
-    @winning_value = grid_len
+    @row_length = grid_len
   end
 
   def is_over?
@@ -43,20 +48,16 @@ class Game
     swap_players!
   end
 
-
-
   private
   def game_over!
     @is_over = true
     set_winner!
   end
 
-  def winning_move?(*sums)
-    is_winning_move = false
-    sums.each do |sum|
-      is_winning_move = true if sum.abs == @winning_value
-    end
-    is_winning_move
+  def on_diagonal?(type, move)
+    row, col = move[0], move[1]
+    return row == col if type == "back"
+    return (@row_length - row - 1) == col if type == "forward"
   end
 
   def record_mark!(move, value)
@@ -75,6 +76,14 @@ class Game
 
   def swap_players!
     @current_player = @current_player == @player1 ? @player2 : @player1
+  end
+
+  def winning_move?(*sums)
+    is_winning_move = false
+    sums.each do |sum|
+      is_winning_move = true if sum.abs == @row_length
+    end
+    is_winning_move
   end
 
 end
