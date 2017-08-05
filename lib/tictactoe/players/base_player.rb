@@ -11,7 +11,7 @@ class BasePlayer
     raise NotImplementedError, "You must allow name to be publicly readable"
   end
 
-  def perform_move
+  def get_move
     raise NotImplementedError, "You must implement the perform_move method"
   end
 

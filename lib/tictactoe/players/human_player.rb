@@ -1,4 +1,4 @@
-require_relative "../io.rb"
+require_relative "../tictactoe_io.rb"
 require_relative "./base_player"
 
 class HumanPlayer < BasePlayer
@@ -9,17 +9,11 @@ class HumanPlayer < BasePlayer
     @board = board
   end
 
-  def perform_move
-    move = self.get_move
-    @board.mark(move, @mark)
-  end
-
-  private
   def get_move
-    move_attempt = IO.get_move_from_player(@board.length)
+    move_attempt = TicTacToeIO.get_move_from_player(@board.length)
     until @board.valid_move?(move_attempt)
-      IO.notify_invalid_move
-      move_attempt = IO.get_move_from_player(@board.length)
+      TicTacToeIO.notify_invalid_move
+      move_attempt = TicTacToeIO.get_move_from_player(@board.length)
     end
     move_attempt
   end

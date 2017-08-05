@@ -17,16 +17,24 @@ class Game
     'o' => -1
   }
 
+  OPPOSITE_MARK = {
+    1 => 'O',
+    -1 => 'X'
+  }
+
   def self.create_player(board, player)
-    type, name, mark = hash.values_at(:type, :name, :mark)
+    type, name, mark = player.values_at(:type, :name, :mark)
     type === "human" ? HumanPlayer.new(name, MARKS_TO_VALUES[mark], board) : ComputerPlayer.new(name, MARKS_TO_VALUES[mark], board)
   end
 
-  attr_reader :current_player, :winner
+  attr_reader :current_player, :winner, :board
   def initialize(grid_len, player1, player2)
     @board = Board.new(grid_len)
+
     @player1 = Game.create_player(@board, player1)
-    @player2 = Game.create_player(2board, player2)
+    player2[:mark] = OPPOSITE_MARK[@player1.mark]
+    @player2 = Game.create_player(@board, player2)
+
     @current_player = [@player1, @player2].sample #randomly select who goes first
     @is_over = false
     @winner = nil
@@ -36,6 +44,10 @@ class Game
       diag_sums: { back_slash: 0, forward_slash: 0}
     }
     @row_length = grid_len
+  end
+
+  def display_current_state
+    @board.print
   end
 
   def over?
@@ -62,18 +74,18 @@ class Game
 
   def record_mark!(move, value)
     row, col = move[0], move[1]
-    @sums[row_sums[row]] += value
-    @sums[col_sums[col]] += value
-    @sums[diag_sums.back_slash] += value if on_diagonal?("back", move)
-    @sums[diag_sums.forward_slash] += value if on_diagonal?("forward", move)
+    @sums[:row_sums][row] += value
+    @sums[:col_sums][col] += value
+    @sums[:diag_sums][:back_slash] += value if on_diagonal?("back", move)
+    @sums[:diag_sums][:forward_slash] += value if on_diagonal?("forward", move)
 
     set_winner! if winning_move?(
-                                @sums[row_sums[row]],
-                                @sums[col_sums[col]],
-                                @sums[diag_sums.back_slash],
-                                @sums[diag_sums.forward_slash]
+                                @sums[:row_sums][row],
+                                @sums[:col_sums][col],
+                                @sums[:diag_sums][:back_slash],
+                                @sums[:diag_sums][:forward_slash]
                                 )
-                                
+
     game_over! if @board.filled?
   end
 

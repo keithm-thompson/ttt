@@ -8,13 +8,11 @@ class ComputerPlayer < BasePlayer
     @board = board
   end
 
-  def perform_move
-    move = self.generate_random_move
-    @board.mark(move, @mark)
+  def get_move
+    move = generate_random_move
   end
 
   private
-
   def generate_random_move
     @board.available_spots.to_a.sample
   end

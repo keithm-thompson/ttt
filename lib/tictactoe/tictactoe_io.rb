@@ -1,5 +1,5 @@
 require 'set'
-
+require 'byebug'
 class TicTacToeIO
   MARKS = Set.new(['X', 'x', 'O', 'o'])
 
@@ -19,24 +19,25 @@ class TicTacToeIO
 
   def self.display_beginning_of_round(current_player)
     puts "It's #{current_player.name}'s turn. Good luck!"
+    puts "Here is the current state of the board:"
   end
 
   def self.get_move_from_player(grid_len)
     puts "Please input two numbers less than #{grid_len} separated by a comma i.e 0,0"
     move = gets.chomp
-    until self.class.valid_move_input?(move, grid_len)
-      self.class.notify_invalid_input
+    until self.valid_move_input?(move, grid_len)
+      self.notify_invalid_input
       puts "Please input two numbers less than #{grid_len} separated by a comma i.e 0,0"
       move = gets.chomp
     end
-    move
+    self.format_move_input(move)
   end
 
   def self.get_player_mark
     puts "Please input X or O to claim a mark for this player."
     mark = gets.chomp
-    until self.class.valid_mark?(mark)
-      self.class.notify_invalid_input
+    until self.valid_mark?(mark)
+      self.notify_invalid_input
       puts "Please input X or O to claim a mark for this player."
       mark = gets.chomp
     end
@@ -46,14 +47,19 @@ class TicTacToeIO
   def self.get_player_name
     puts "Please input a name for this player."
     name = gets.chomp
+    until name.length > 0
+      self.notify_invalid_input
+      puts "Please input a name for this player."
+      name = gets.chomp
+    end
     name
   end
 
   def self.get_player_type
     puts "Would you like for this player to be a computer player? Y or N"
     computer = gets.chomp
-    until self.class.valid_player_type?(computer)
-      self.class.notify_invalid_input
+    until self.valid_player_input?(computer)
+      self.notify_invalid_input
       puts "Would you like for this player to be a computer player? Y or N"
       computer = gets.chomp
     end
@@ -63,8 +69,8 @@ class TicTacToeIO
   def self.get_grid_length
     puts "Please input the number of spaces that you like to be in each row."
     grid_len = gets.chomp
-    until self.class.valid_grid_length?(grid_len)
-      self.class.notify_invalid_input
+    until self.valid_grid_length?(grid_len)
+      self.notify_invalid_input
       puts "Please input the number of spaces that you like to be in each row."
       grid_len = gets.chomp
     end
@@ -77,6 +83,18 @@ class TicTacToeIO
 
   def self.notify_invalid_move
     puts "Oops! Looks that point on the grid has already been played."
+  end
+
+  def self.play_again?
+    puts "Would you like to play again? Y or N"
+    play_again = gets.chomp
+    until self.valid_player_input?(play_again)
+      self.notify_invalid_input
+      puts "Would you like to play again? Y or N"
+      play_again = gets.chomp
+    end
+    ['Y', 'y'].include?(play_again)
+
   end
 
   def self.print_border(length)
@@ -92,12 +110,16 @@ class TicTacToeIO
   end
 
   private
-  def display_winner(name)
+  def self.display_winner(name)
     puts "#{name} wins! Good job!"
   end
 
-  def display_tie
+  def self.display_tie
     puts "The game ended in a tie! Well played."
+  end
+
+  def self.format_move_input(input)
+    input.split(",").map(&:to_i)
   end
 
   def self.notify_invalid_input
@@ -105,7 +127,8 @@ class TicTacToeIO
   end
 
   def self.valid_grid_length?(grid_len)
-    Integer(grid_len || '')
+    begin
+      Integer(grid_len || '')
     # add the || condition because Integer(nil) raises TypeError instead of ArgumentError
     rescue ArgumentError
       false
@@ -119,9 +142,20 @@ class TicTacToeIO
 
   def self.valid_move_input?(input, grid_len)
     first, second, *rest = input.split(",")
-    is_first_valid = first.a? Integer && first < grid_len
-    is_second_valid = second.is_a? Integer && second < grid_len
+    begin
+      first = Integer(first || '')
+      second = Integer(second || '')
+    rescue ArgumentError
+      return false
+    end
+    is_first_valid = first < grid_len
+    is_second_valid = second < grid_len
 
-    is_first_valid && is_second_valid && rest.empty?
+    is_first_valid and is_second_valid and rest.empty?
+  end
+
+  def self.valid_player_input?(input)
+    allowed_values = ['Y', 'y', 'N', 'n']
+    allowed_values.include?(input)
   end
 end

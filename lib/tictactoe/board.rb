@@ -1,16 +1,12 @@
 require_relative './tictactoe_io.rb'
-require_relative 'set'
+require 'set'
 
 class Board
   attr_reader :available_spots
   def initialize(grid_len)
-    @grid = Array.new(grid_len, 0) { Array.new(grid_len, 0) }
+    @grid = Array.new(grid_len) { Array.new(grid_len, 0) }
     @available_spots = Set.new
     initialize_spot_set!
-  end
-
-  def [](row, col)
-    @grid[row][col]
   end
 
   def filled?
@@ -21,8 +17,13 @@ class Board
     @grid[point[0], point[1]]
   end
 
+  def length
+    @grid.length
+  end
+
   def mark(point, value)
-    @grid[point[0], point[1]] = value
+    row, col = point
+    @grid[row][col] = value
     remove_point_from_availabilities(point)
   end
 
@@ -39,11 +40,6 @@ class Board
     @available_spots.include?(move)
   end
   private
-
-  def []=(row, col, value)
-    @grid[row][col]
-  end
-
   def initialize_spot_set!
     for i in 0...@grid.length
       for j in 0...@grid.length
