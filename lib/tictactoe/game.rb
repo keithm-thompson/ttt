@@ -16,7 +16,6 @@ class Game
     'O' => -1,
     'o' => -1
   }
-
   OPPOSITE_MARK = {
     1 => 'O',
     -1 => 'X'
@@ -56,7 +55,7 @@ class Game
 
   def play_round
     move, mark = @current_player.get_move, @current_player.mark
-    @board.mark(move, mark)
+    @board.mark!(move, mark)
     record_mark!(move, mark)
     swap_players!
   end

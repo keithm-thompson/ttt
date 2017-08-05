@@ -18,7 +18,7 @@ class Board
     @grid.length
   end
 
-  def mark(point, value)
+  def mark!(point, value)
     row, col = point
     @grid[row][col] = value
     remove_point_from_availabilities(point)
@@ -36,7 +36,7 @@ class Board
   def valid_move?(move)
     @available_spots.include?(move)
   end
-  
+
   private
   def initialize_spot_set!
     for i in 0...@grid.length

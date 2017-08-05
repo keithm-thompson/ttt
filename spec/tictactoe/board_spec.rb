@@ -39,13 +39,13 @@ describe Board do
 
   describe '#mark' do
     it 'marks a point on grid' do
-      board.mark([0,0], 1)
+      board.mark!([0,0], 1)
       grid = board.instance_variable_get(:@grid)
       expect(grid[0][0]).to eq(1)
     end
 
     it 'removes point from available_spots' do
-      board.mark([0,0], 1)
+      board.mark!([0,0], 1)
       available_spots = board.instance_variable_get(:@available_spots)
       expect(available_spots.include?([0,0])).to eq(false)
     end
@@ -75,7 +75,7 @@ describe Board do
 
     context "when point has been marked" do
       it "returns false" do
-        board.mark([0,0], 1)
+        board.mark!([0,0], 1)
         expect(board.valid_move?([0,0])).to eq(false)
       end
     end
