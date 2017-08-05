@@ -13,6 +13,10 @@ class Board
     @grid[row][col]
   end
 
+  def filled?
+    @available_spots.empty?
+  end
+
   def get(point)
     @grid[point[0], point[1]]
   end
@@ -22,9 +26,6 @@ class Board
     remove_point_from_availabilities(point)
   end
 
-  def valid_move?(move)
-    @available_spots.include?(move)
-  end
 
   def print
     TicTacToeIO.print_border(@grid.length)
@@ -34,13 +35,16 @@ class Board
     end
   end
 
+  def valid_move?(move)
+    @available_spots.include?(move)
+  end
   private
 
   def []=(row, col, value)
     @grid[row][col]
   end
 
-  def initialize_spot_set
+  def initialize_spot_set!
     for i in 0...@grid.length
       for j in 0...@grid.length
         @available_spots.add([i,j])

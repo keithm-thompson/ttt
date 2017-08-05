@@ -9,18 +9,19 @@ class TicTacToeIO
     1 => 'X'
   }
 
-  def self.class.get_mark_for_first_player(name)
-    puts "#{name}, please input X or O to claim a mark."
-    mark = gets.chomp
-    until self.class.valid_mark?(mark)
-      self.class.notify_invalid_input
-      puts "#{name}, please input X or O to claim a mark."
-      mark = gets.chomp
+  def self.display_results(winner)
+    if winner
+      display_winner(winner.name)
+    else
+      display_tie
     end
-    mark
   end
 
-  def self.class.get_move_from_player(grid_len)
+  def self.display_beginning_of_round(current_player)
+    puts "It's #{current_player.name}'s turn. Good luck!"
+  end
+
+  def self.get_move_from_player(grid_len)
     puts "Please input two numbers less than #{grid_len} separated by a comma i.e 0,0"
     move = gets.chomp
     until self.class.valid_move_input?(move, grid_len)
@@ -31,32 +32,58 @@ class TicTacToeIO
     move
   end
 
-  def self.class.get_name(player)
-    puts "Please input a name for #{player}."
+  def self.get_player_mark
+    puts "Please input X or O to claim a mark for this player."
+    mark = gets.chomp
+    until self.class.valid_mark?(mark)
+      self.class.notify_invalid_input
+      puts "Please input X or O to claim a mark for this player."
+      mark = gets.chomp
+    end
+    mark
+  end
+
+  def self.get_player_name
+    puts "Please input a name for this player."
     name = gets.chomp
     name
   end
 
-  def self.class.get_number_of_human_players
-    puts "Please input 0, 1, or 2 to signify how many people are playing."
-    num = gets.chomp
-    until self.class.valid_num_players?(num)
+  def self.get_player_type
+    puts "Would you like for this player to be a computer player? Y or N"
+    computer = gets.chomp
+    until self.class.valid_player_type?(computer)
       self.class.notify_invalid_input
-      puts "Please input 0, 1, or 2 to signify how many people are playing."
-      num = gets.chomp
+      puts "Would you like for this player to be a computer player? Y or N"
+      computer = gets.chomp
     end
-    num
+    computer == 'Y' ? "computer" : "human"
   end
 
-  def self.class.notify_invalid_move
+  def self.get_grid_length
+    puts "Please input the number of spaces that you like to be in each row."
+    grid_len = gets.chomp
+    until self.class.valid_grid_length?(grid_len)
+      self.class.notify_invalid_input
+      puts "Please input the number of spaces that you like to be in each row."
+      grid_len = gets.chomp
+    end
+    grid_len.to_i
+  end
+
+  def self.greet
+    puts "Time to play TicTacToe!"
+  end
+
+  def self.notify_invalid_move
     puts "Oops! Looks that point on the grid has already been played."
   end
 
-  def self.class.print_border(length)
+  def self.print_border(length)
     puts " " + Array.new(length ,"- -").join(" ")
   end
 
-  def self.class.print_row(row)
+  def self.print_row(row)
     output = "|"
     row.each do |val|
       output.concat(" " + VALUES_TO_MARKS[val] + " |")
@@ -65,27 +92,36 @@ class TicTacToeIO
   end
 
   private
-  def self.class.notify_invalid_input
+  def display_winner(name)
+    puts "#{name} wins! Good job!"
+  end
+
+  def display_tie
+    puts "The game ended in a tie! Well played."
+  end
+
+  def self.notify_invalid_input
     puts "Oops! Looks like that input was invalid."
   end
 
-  def valid_mark?(mark)
+  def self.valid_grid_length?(grid_len)
+    Integer(grid_len || '')
+    # add the || condition because Integer(nil) raises TypeError instead of ArgumentError
+    rescue ArgumentError
+      false
+    end
+    true
+  end
+
+  def self.valid_mark?(mark)
     MARKS.include?(mark)
   end
 
-  def self.class.valid_move_input?(input, grid_len)
+  def self.valid_move_input?(input, grid_len)
     first, second, *rest = input.split(",")
     is_first_valid = first.a? Integer && first < grid_len
     is_second_valid = second.is_a? Integer && second < grid_len
 
     is_first_valid && is_second_valid && rest.empty?
-  end
-
-  def valid_num_players?(num_players)
-    num_players = Integer(num_players || '')
-    # add the || condition because Integer(nil) raises TypeError instead of ArgumentError
-    num_players.between?(0,2)
-  rescue ArgumentError
-    false
   end
 end

@@ -2,10 +2,11 @@ require_relative "../io.rb"
 require_relative "./base_player"
 
 class HumanPlayer < BasePlayer
-  attr_reader :mark
-  def initialize(board, mark)
-    @board = board
+  attr_reader :mark, :name
+  def initialize(name, mark, board)
+    @name = name
     @mark = mark
+    @board = board
   end
 
   def perform_move

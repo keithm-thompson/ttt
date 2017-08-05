@@ -17,11 +17,12 @@ class Game
     'o' => -1
   }
 
-  def self.create_player(board, type, mark)
-    type === "human" ? HumanPlayer.new(board, MARKS_TO_VALUES[mark]) : ComputerPlayer.new(board, MARKS_TO_VALUES[mark])
+  def self.create_player(board, player)
+    type, name, mark = hash.values_at(:type, :name, :mark)
+    type === "human" ? HumanPlayer.new(name, MARKS_TO_VALUES[mark], board) : ComputerPlayer.new(name, MARKS_TO_VALUES[mark], board)
   end
 
-  attr_reader :current_player
+  attr_reader :current_player, :winner
   def initialize(grid_len, player1, player2)
     @board = Board.new(grid_len)
     @player1 = Game.create_player(@board, player1)
@@ -37,7 +38,7 @@ class Game
     @row_length = grid_len
   end
 
-  def is_over?
+  def over?
     @is_over
   end
 
@@ -51,7 +52,6 @@ class Game
   private
   def game_over!
     @is_over = true
-    set_winner!
   end
 
   def on_diagonal?(type, move)
@@ -67,11 +67,19 @@ class Game
     @sums[diag_sums.back_slash] += value if on_diagonal?("back", move)
     @sums[diag_sums.forward_slash] += value if on_diagonal?("forward", move)
 
-    game_over! if winning_move?(row_sum, col_sum, back_diag_sum, front_diag_sum)
+    set_winner! if winning_move?(
+                                @sums[row_sums[row]],
+                                @sums[col_sums[col]],
+                                @sums[diag_sums.back_slash],
+                                @sums[diag_sums.forward_slash]
+                                )
+                                
+    game_over! if @board.filled?
   end
 
   def set_winner!
     @winner = @current_player
+    game_over!
   end
 
   def swap_players!

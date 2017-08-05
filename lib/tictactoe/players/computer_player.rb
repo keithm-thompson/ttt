@@ -1,10 +1,11 @@
 require_relative "./base_player"
 
 class ComputerPlayer < BasePlayer
-  attr_reader :mark
-  def initialize(board, mark)
-    @board = board
+  attr_reader :mark, :name
+  def initialize(name, mark, board)
+    @name = name
     @mark = mark
+    @board = board
   end
 
   def perform_move
@@ -15,10 +16,6 @@ class ComputerPlayer < BasePlayer
   private
 
   def generate_random_move
-    row, col = rand(@board.length), rand(@board.length)
-    until @board.valid_move?([row,col])
-      row, col = rand(@board.length), rand(@board.length)
-    end
-    [row,col]
+    @board.available_spots.to_a.sample
   end
 end
