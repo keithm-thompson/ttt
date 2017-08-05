@@ -82,7 +82,7 @@ class TicTacToeIO
   end
 
   def self.notify_invalid_move
-    puts "Oops! Looks that point on the grid has already been played."
+    puts "Oops! Looks like that point on the grid has already been played."
   end
 
   def self.play_again?
