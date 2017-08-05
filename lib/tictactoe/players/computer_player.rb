@@ -1,6 +1,7 @@
 require_relative "./base_player"
 
 class ComputerPlayer < BasePlayer
+  attr_reader :mark
   def initialize(board, mark)
     @board = board
     @mark = mark

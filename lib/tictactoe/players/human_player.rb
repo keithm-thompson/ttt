@@ -2,6 +2,7 @@ require_relative "../io.rb"
 require_relative "./base_player"
 
 class HumanPlayer < BasePlayer
+  attr_reader :mark
   def initialize(board, mark)
     @board = board
     @mark = mark
