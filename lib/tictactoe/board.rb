@@ -1,5 +1,6 @@
 require_relative './tictactoe_io.rb'
 require 'set'
+require 'byebug'
 
 class Board
   attr_reader :available_spots
@@ -11,10 +12,6 @@ class Board
 
   def filled?
     @available_spots.empty?
-  end
-
-  def get(point)
-    @grid[point[0], point[1]]
   end
 
   def length
@@ -39,6 +36,7 @@ class Board
   def valid_move?(move)
     @available_spots.include?(move)
   end
+  
   private
   def initialize_spot_set!
     for i in 0...@grid.length
