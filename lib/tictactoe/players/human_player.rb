@@ -15,10 +15,10 @@ class HumanPlayer < BasePlayer
   private
 
   def get_move
-    move_attempt = IO.get_move_from_player
+    move_attempt = IO.get_move_from_player(@board.length)
     until @board.valid_move?(move_attempt)
       IO.notify_invalid_move
-      move_attempt = IO.get_move_from_player
+      move_attempt = IO.get_move_from_player(@board.length)
     end
     move_attempt
   end

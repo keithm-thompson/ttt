@@ -9,17 +9,19 @@ class Board
     @grid[point[0], point[1]] = value
   end
 
-  def check(point)
+  def get(point)
     @grid[point[0], point[1]]
   end
 
-  def is_valid?(move)
-    check(move).zero?
+  def valid_move?(move)
+    self.get(move).zero?
   end
 
   def print
-    grid.each do |row|
+    IO.print_border
+    @grid.each do |row|
       IO.print_row(row)
+      IO.print_border(row.length)
     end
   end
 
