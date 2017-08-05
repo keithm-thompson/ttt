@@ -1,8 +1,9 @@
+require "byebug"
 class IO
   VALUES_TO_MARKS = {
-    -1: 'O',
-    0: ' ',
-    1: 'X'
+    -1 => 'O',
+    0 => ' ',
+    1 => 'X'
   }
 
   def self.get_move_from_player(grid_len)
@@ -15,13 +16,12 @@ class IO
     move
   end
 
-
   def self.notify_invalid_move
     puts "Oops! Looks that point on the grid has already been played."
   end
 
   def self.print_border(length)
-    puts Array.new(length,"_").join()
+    puts " " + Array.new(length ,"-").join(" ")
   end
 
   def self.print_row(row)

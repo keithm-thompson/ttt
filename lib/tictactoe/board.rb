@@ -18,10 +18,10 @@ class Board
   end
 
   def print
-    IO.print_border
+    IO.print_border(@grid.length)
     @grid.each do |row|
       IO.print_row(row)
-      IO.print_border(row.length)
+      IO.print_border(@grid.length)
     end
   end
 
