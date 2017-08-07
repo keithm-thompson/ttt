@@ -98,7 +98,7 @@ class TicTacToeIO
   end
 
   def self.print_border(length)
-    puts " " + Array.new(length ,"- -").join(" ")
+    puts " " + Array.new(length ,"- -").join(" ") + " "
   end
 
   def self.print_row(row)
@@ -128,12 +128,12 @@ class TicTacToeIO
 
   def self.valid_grid_length?(grid_len)
     begin
-      Integer(grid_len || '')
+      len = Integer(grid_len || '')
     # add the || condition because Integer(nil) raises TypeError instead of ArgumentError
     rescue ArgumentError
       false
     end
-    true
+    len > 2
   end
 
   def self.valid_mark?(mark)

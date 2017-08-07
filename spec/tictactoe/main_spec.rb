@@ -16,6 +16,7 @@ describe Main do
       allow(Game).to receive(:new).and_return(nil)
       allow(Main).to receive(:play).and_return(nil)
     end
+
     it 'creates a new game' do
       expect(Game).to receive(:new)
       Main.start_game
@@ -34,8 +35,8 @@ describe Main do
       allow(TicTacToeIO).to receive(:get_player_mark).and_return("X")
       allow(STDOUT).to receive(:puts).and_return("The following information is for the first player.")
     end
-
     after(:each) { Main.get_player_information("first", true)}
+    
     it "displays which player the information is for" do
       expect(STDOUT).to receive(:puts).with("The following information is for the first player.")
     end
