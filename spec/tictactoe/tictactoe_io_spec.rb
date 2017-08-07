@@ -68,12 +68,12 @@ describe TicTacToeIO do
     end
 
     context "when given invalid input" do
-      before(:each) do
-        allow(STDOUT).to receive(:puts).and_return("Oops! Looks like that input was invalid.")
-        allow(TicTacToeIO).to receive(:valid_move_input?).and_return(false, true)
-      end
-
       it "notifies user" do
+        allow(TicTacToeIO).to receive(:format_move_input).and_return(nil)
+        allow(TicTacToeIO).to receive(:gets).and_return("0,0")
+        allow(TicTacToeIO).to receive(:valid_move_input?).and_return(false, true)
+        allow(STDOUT).to receive(:puts).and_return("Oops! Looks like that input was invalid.")
+
         expect(STDOUT).to receive(:puts).with("Oops! Looks like that input was invalid.")
       end
     end
@@ -108,12 +108,10 @@ describe TicTacToeIO do
     end
 
     context "when given invalid input" do
-      before(:each) do
+      it "notifies user" do
         allow(STDOUT).to receive(:puts).and_return("Oops! Looks like that input was invalid.")
         allow(TicTacToeIO).to receive(:valid_mark?).and_return(false, true)
-      end
-
-      it "notifies user" do
+        allow(TicTacToeIO).to receive(:gets).and_return("0,0")
         expect(STDOUT).to receive(:puts).with("Oops! Looks like that input was invalid.")
       end
     end
@@ -148,12 +146,11 @@ describe TicTacToeIO do
     end
 
     context "when given invalid input" do
-      before(:each) do
+      it "notifies user" do
         allow(STDOUT).to receive(:puts).and_return("Oops! Looks like that input was invalid.")
         allow(TicTacToeIO).to receive(:valid_grid_length?).and_return(false, true)
-      end
+        allow(TicTacToeIO).to receive(:gets).and_return("0,0")
 
-      it "notifies user" do
         expect(STDOUT).to receive(:puts).with("Oops! Looks like that input was invalid.")
       end
     end
@@ -202,12 +199,11 @@ describe TicTacToeIO do
     end
 
     context "when given invalid input" do
-      before(:each) do
+      it "notifies user" do
         allow(STDOUT).to receive(:puts).and_return("Oops! Looks like that input was invalid.")
         allow(TicTacToeIO).to receive(:valid_player_input?).and_return(false, true)
-      end
-
-      it "notifies user" do
+        allow(TicTacToeIO).to receive(:gets).and_return("0,0")
+        
         expect(STDOUT).to receive(:puts).with("Oops! Looks like that input was invalid.")
       end
     end

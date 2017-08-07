@@ -37,4 +37,4 @@ class Main
   end
 end
 
-Main.start_game unless (not ARGV.empty?) and ARGV[0].match('^spec')
+Main.start_game unless ENV['RUBY_ENV'] == 'test'
