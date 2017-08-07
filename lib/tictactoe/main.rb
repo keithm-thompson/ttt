@@ -1,7 +1,7 @@
 require_relative "game.rb"
 require_relative "tictactoe_io.rb"
 
-class Main
+module Main
   def self.start_game
     TicTacToeIO.greet
     grid_len = TicTacToeIO.get_grid_length

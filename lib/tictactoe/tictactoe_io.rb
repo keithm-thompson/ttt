@@ -1,6 +1,6 @@
 require 'set'
-require 'byebug'
-class TicTacToeIO
+
+module TicTacToeIO
   MARKS = Set.new(['X', 'x', 'O', 'o'])
 
   VALUES_TO_MARKS = {
@@ -67,11 +67,11 @@ class TicTacToeIO
   end
 
   def self.get_grid_length
-    puts "Please input the number of spaces that you like to be in each row."
+    puts "Please input the number of spaces that you like to be in each row. (As a number > 2)"
     grid_len = gets.chomp
     until self.valid_grid_length?(grid_len)
       self.notify_invalid_input
-      puts "Please input the number of spaces that you like to be in each row."
+      puts "Please input the number of spaces that you like to be in each row. (As a number > 2)"
       grid_len = gets.chomp
     end
     grid_len.to_i
