@@ -84,7 +84,7 @@ describe Game do
     end
   end
 
-  describe "#play_round" do
+  describe "#play_round!" do
     let(:current_player) { game.instance_variable_get(:@current_player) }
     let(:board) { game.instance_variable_get(:@board) }
 
@@ -95,7 +95,7 @@ describe Game do
       allow(board).to receive(:mark!).and_return(nil)
 
       expect(board).to receive(:mark!)
-      game.play_round
+      game.play_round!
     end
 
     it "swaps players" do
@@ -104,23 +104,23 @@ describe Game do
       allow(game).to receive(:record_mark!).and_return(nil)
       allow(board).to receive(:mark!).and_return(nil)
 
-      game.play_round
+      game.play_round!
       next_player = game.instance_variable_get(:@current_player)
       expect(next_player).to_not eq(current_player)
     end
 
     context "when game ends with a winner on round" do
       before(:each) do
-        allow(current_player).to receive(:get_move).and_return([0,0], [0,2])
+        allow(current_player).to receive(:get_move).and_return([0,0], [2,2])
         allow(current_player).to receive(:mark).and_return(1)
         allow(board).to receive(:mark!).and_return(nil)
-        game.play_round
+        game.play_round!
 
         next_player = game.instance_variable_get(:@current_player)
-        allow(next_player).to receive(:get_move).and_return([0,1])
+        allow(next_player).to receive(:get_move).and_return([1,1])
         allow(next_player).to receive(:mark).and_return(1)
-        game.play_round
-        game.play_round
+        game.play_round!
+        game.play_round!
       end
 
       it "sets game over to true" do
@@ -138,7 +138,7 @@ describe Game do
         allow(current_player).to receive(:mark).and_return(1)
         allow(board).to receive(:mark!).and_return(nil)
         allow(board).to receive(:filled?).and_return(true)
-        game.play_round
+        game.play_round!
       end
 
       it "sets game over to true" do
@@ -156,7 +156,7 @@ describe Game do
         allow(current_player).to receive(:mark).and_return(1)
         allow(board).to receive(:mark!).and_return(nil)
         allow(board).to receive(:filled?).and_return(false)
-        game.play_round
+        game.play_round!
       end
 
       it "does not set game over to true" do

@@ -36,7 +36,7 @@ describe Main do
       allow(STDOUT).to receive(:puts).and_return("The following information is for the first player.")
     end
     after(:each) { Main.get_player_information("first", true)}
-    
+
     it "displays which player the information is for" do
       expect(STDOUT).to receive(:puts).with("The following information is for the first player.")
     end
@@ -127,13 +127,13 @@ describe Main do
   describe '::play_round' do
     before(:each) do
       allow(TicTacToeIO).to receive(:display_beginning_of_round).and_return(nil)
-      allow(game).to receive(:play_round).and_return(nil)
+      allow(game).to receive(:play_round!).and_return(nil)
       allow(game).to receive(:display_current_state).and_return(nil)
       allow(game).to receive(:current_player).and_return(nil)
     end
 
     it 'calls Game#play_round' do
-      expect(game).to receive(:play_round)
+      expect(game).to receive(:play_round!)
       Main.play_round(game)
     end
 

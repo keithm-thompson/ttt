@@ -23,7 +23,7 @@ class Game
 
   def self.create_player(board, player)
     type, name, mark = player.values_at(:type, :name, :mark)
-    type === "human" ? HumanPlayer.new(name, MARKS_TO_VALUES[mark], board) : ComputerPlayer.new(name, MARKS_TO_VALUES[mark], board)
+    type == "human" ? HumanPlayer.new(name, MARKS_TO_VALUES[mark], board) : ComputerPlayer.new(name, MARKS_TO_VALUES[mark], board)
   end
 
   attr_reader :current_player, :winner, :board
@@ -54,7 +54,7 @@ class Game
     @is_over
   end
 
-  def play_round
+  def play_round!
     move, mark = @current_player.get_move, @current_player.mark
     @board.mark!(move, mark)
     record_mark!(move, mark)

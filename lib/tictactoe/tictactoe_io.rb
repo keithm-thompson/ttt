@@ -97,6 +97,10 @@ class TicTacToeIO
 
   end
 
+  def self.print_blank_line
+    puts ""
+  end
+
   def self.print_border(length)
     puts " " + Array.new(length ,"- -").join(" ") + " "
   end
@@ -107,6 +111,10 @@ class TicTacToeIO
       output.concat(" " + VALUES_TO_MARKS[val] + " |")
     end
     puts output
+  end
+
+  def self.show_which_player(player)
+    puts "The following information is for the #{player} player."
   end
 
   private
