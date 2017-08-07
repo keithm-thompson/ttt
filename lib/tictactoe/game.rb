@@ -49,6 +49,7 @@ class Game
     @board.print
   end
 
+  # simple getter method to conform to ruby standards of boolean methods ending with ?
   def over?
     @is_over
   end
