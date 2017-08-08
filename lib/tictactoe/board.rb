@@ -3,7 +3,7 @@ require 'set'
 require 'byebug'
 
 class Board
-  attr_reader :available_spots
+  attr_reader :available_spots, :grid
   def initialize(grid_len)
     @grid = Array.new(grid_len) { Array.new(grid_len, 0) }
     @available_spots = Set.new

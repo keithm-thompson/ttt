@@ -1,6 +1,7 @@
 require_relative './board.rb'
 require_relative './players/human_player.rb'
 require_relative './players/computer_player.rb'
+require_relative './players/smarter_computer_player.rb'
 
 # I have mapped the values of the marks to either -1 or 1 to make checking for a
 # win condition easier. Instead of iterating through the board and seeing
@@ -23,7 +24,7 @@ class Game
 
   def self.create_player(board, player)
     type, name, mark = player.values_at(:type, :name, :mark)
-    type == "human" ? HumanPlayer.new(name, MARKS_TO_VALUES[mark], board) : ComputerPlayer.new(name, MARKS_TO_VALUES[mark], board)
+    type == "human" ? HumanPlayer.new(name, MARKS_TO_VALUES[mark], board) : SmarterComputerPlayer.new(name, MARKS_TO_VALUES[mark], board)
   end
 
   attr_reader :current_player, :winner, :board

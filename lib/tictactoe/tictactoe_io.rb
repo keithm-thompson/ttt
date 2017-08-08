@@ -85,6 +85,10 @@ module TicTacToeIO
     puts "Oops! Looks like that point on the grid has already been played."
   end
 
+  def self.notify_creating_graph
+    puts "Analyzing board configuration to determine best move. This may take a few seconds."
+  end
+
   def self.play_again?
     puts "Would you like to play again? Y or N"
     play_again = gets.chomp

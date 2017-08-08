@@ -9,7 +9,7 @@ class ComputerPlayer < BasePlayer
   end
 
   def get_move
-    move = generate_random_move
+    generate_random_move
   end
 
   private
