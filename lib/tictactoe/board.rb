@@ -1,6 +1,5 @@
 require_relative './tictactoe_io.rb'
 require 'set'
-require 'byebug'
 
 class Board
   attr_reader :available_spots, :grid
