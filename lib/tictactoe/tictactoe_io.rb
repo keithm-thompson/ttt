@@ -22,6 +22,17 @@ module TicTacToeIO
     puts "Here is the current state of the board:"
   end
 
+  def self.get_computer_type
+    puts "Would you like the computer player to play smarter than random? Y or N"
+    input = gets.chomp
+    until self.valid_player_input?(input)
+      self.notify_invalid_input
+      puts "Would you like the computer player to play smarter than random? Y or N"
+      input = gets.chomp
+    end
+    ['Y', 'y'].include?(input) ? "smarter_computer" : "computer"
+  end
+
   def self.get_move_from_player(grid_len)
     puts "Please input two numbers less than #{grid_len} separated by a comma i.e 0,0"
     move = gets.chomp
@@ -57,13 +68,13 @@ module TicTacToeIO
 
   def self.get_player_type
     puts "Would you like for this player to be a computer player? Y or N"
-    computer = gets.chomp
-    until self.valid_player_input?(computer)
+    type = gets.chomp
+    until self.valid_player_input?(type)
       self.notify_invalid_input
       puts "Would you like for this player to be a computer player? Y or N"
-      computer = gets.chomp
+      type = gets.chomp
     end
-    computer == 'Y' ? "computer" : "human"
+    type == 'Y' ? self.get_computer_type : "human"
   end
 
   def self.get_grid_length

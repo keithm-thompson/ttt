@@ -3,9 +3,13 @@ OPPOSITE_MARKS = {
   -1 => 1
 }
 
+# since this was part of the 'extras' I didn't write unit tests for them nor did I take the time to refactor it.
+# I can easily add it / clean it up if you'd like
+
 class TicTacToeNode
   attr_reader :config, :mark
-  attr_accessor :num_losing_descendants, :num_winning_descendants, :checked_descendants
+  attr_accessor :num_losing_descendants, :num_winning_descendants,
+                :checked_descendants, :guaranteed_loser, :winner
 
   def initialize(config, mark)
     @config = config
@@ -14,6 +18,7 @@ class TicTacToeNode
     @num_winning_descendants = 0
     @length = config.length
     @winner = nil
+    @guaranteed_loser = nil
     @filled = nil
     @checked_descendants = false
   end
@@ -48,7 +53,7 @@ class TicTacToeNode
       return comparision
     end
 
-    if (@num_losing_descendants < other.num_losing_descendants)
+    if (@num_winning_descendants > other.num_winning_descendants)
       1
     else
       -1
@@ -167,14 +172,28 @@ class TicTacToeGraph
       return 0
     end
 
+    num_guaranteed_losing_children = 0
     @adjacency_list[node].each do |child|
       if child.winner?
         node.num_winning_descendants += 1
+        node.guaranteed_loser = true
       else
         get_descendants(child)
         node.num_winning_descendants += child.num_losing_descendants
         node.num_losing_descendants += child.num_winning_descendants
       end
+
+      if child.guaranteed_loser.nil?
+        if (guaranteed_loser?(child))
+          num_guaranteed_losing_children += 1
+        end
+      else
+        num_guaranteed_losing_children += 1 if child.guaranteed_loser
+      end
+    end
+
+    if (num_guaranteed_losing_children == @adjacency_list[node].length)
+      node.winner = true
     end
     0
   end
@@ -188,14 +207,25 @@ class TicTacToeGraph
     next_move = nil
     @adjacency_list[node].sort { |a,b| a.compare(b, @adjacency_list) }.each do |move|
       next unless @adjacency_list[move]
-
-      is_non_losing = @adjacency_list[move].select {|child| child.winner?}.empty?
-      if (is_non_losing)
+      unless (move.guaranteed_loser)
         next_move = move
         break
       end
     end
     next_move or @adjacency_list[node].first
+  end
+
+  def guaranteed_loser?(child)
+    return false if @adjacency_list[child].nil?
+
+    guaranteed_loser = false
+    @adjacency_list[child].each do |grand_child|
+      if (grand_child.winner?)
+        guaranteed_loser = true
+        break
+      end
+    end
+    return guaranteed_loser
   end
 end
 

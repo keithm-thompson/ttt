@@ -24,7 +24,7 @@ class SmarterComputerPlayer < ComputerPlayer
 
 private
   def can_make_graph?
-    @board.available_spots.length < 12
+    @board.available_spots.length < 11
   end
 
   def choose_non_losing_move

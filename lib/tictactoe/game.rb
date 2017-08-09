@@ -17,14 +17,22 @@ class Game
     'O' => -1,
     'o' => -1
   }
+
   OPPOSITE_MARK = {
     1 => 'O',
     -1 => 'X'
   }
 
+  PLAYER_TYPES = {
+    "human" => HumanPlayer,
+    "smarter_computer" => SmarterComputerPlayer,
+    "computer" => ComputerPlayer
+  }
+
   def self.create_player(board, player)
     type, name, mark = player.values_at(:type, :name, :mark)
-    type == "human" ? HumanPlayer.new(name, MARKS_TO_VALUES[mark], board) : SmarterComputerPlayer.new(name, MARKS_TO_VALUES[mark], board)
+    player_class = PLAYER_TYPES[type]
+    player_class.new(name, MARKS_TO_VALUES[mark], board)
   end
 
   attr_reader :current_player, :winner, :board
