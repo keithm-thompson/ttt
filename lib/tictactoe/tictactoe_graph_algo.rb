@@ -3,9 +3,6 @@ OPPOSITE_MARKS = {
   -1 => 1
 }
 
-# since this was part of the 'extras' I didn't write unit tests for them nor did I take the time to refactor it.
-# I can easily add it / clean it up if you'd like
-
 class TicTacToeNode
   attr_reader :config, :mark
   attr_accessor :num_losing_descendants, :num_winning_descendants,

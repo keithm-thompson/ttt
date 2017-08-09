@@ -11,7 +11,6 @@ class BasePlayer
   end
 
   def get_move
-    raise NotImplementedError, "You must implement the perform_move method"
+    raise NotImplementedError, "You must implement the get_move method"
   end
-
 end
