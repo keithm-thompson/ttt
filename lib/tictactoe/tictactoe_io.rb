@@ -67,11 +67,11 @@ module TicTacToeIO
   end
 
   def self.get_grid_length
-    puts "Please input the number of spaces that you like to be in each row. (As a number > 2)"
+    puts "Please input the number of spaces that you like to be in each row. (2 < number < 6)"
     grid_len = gets.chomp
     until self.valid_grid_length?(grid_len)
       self.notify_invalid_input
-      puts "Please input the number of spaces that you like to be in each row. (As a number > 2)"
+      puts "Please input the number of spaces that you like to be in each row. (2 < number < 6)"
       grid_len = gets.chomp
     end
     grid_len.to_i
@@ -143,9 +143,9 @@ module TicTacToeIO
       len = Integer(grid_len || '')
     # add the || condition because Integer(nil) raises TypeError instead of ArgumentError
     rescue ArgumentError
-      false
+      return false
     end
-    len > 2
+    len > 2 && len < 6
   end
 
   def self.valid_mark?(mark)

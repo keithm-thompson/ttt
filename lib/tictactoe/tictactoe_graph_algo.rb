@@ -5,7 +5,7 @@ OPPOSITE_MARKS = {
 
 class TicTacToeNode
   attr_reader :config, :mark
-  attr_accessor :num_losing_descendants, :num_winning_descendants
+  attr_accessor :num_losing_descendants, :num_winning_descendants, :checked_descendants
 
   def initialize(config, mark)
     @config = config
@@ -14,15 +14,17 @@ class TicTacToeNode
     @num_winning_descendants = 0
     @length = config.length
     @winner = nil
+    @filled = nil
+    @checked_descendants = false
   end
 
   def generate_children
     children = []
     potential_config = @config.deep_dup
-    @length.times do |num1|
-      @length.times do |num2|
-        if potential_config[num1][num2].zero?
-          potential_config[num1][num2] = @mark
+    @length.times do |row|
+      @length.times do |col|
+        if potential_config[row][col].zero?
+          potential_config[row][col] = @mark
           new_node = TicTacToeNode.new(potential_config, OPPOSITE_MARKS[@mark])
           children << new_node
           potential_config = @config.deep_dup
@@ -42,21 +44,23 @@ class TicTacToeNode
       comparision = -1 if child.winner?
     end
 
-    return comparision if comparision
+    unless comparision.nil?
+      return comparision
+    end
 
     if (@num_losing_descendants < other.num_losing_descendants)
-      -1
-    else
       1
+    else
+      -1
     end
   end
 
   def extract_diff(other)
     diff = []
-    @length.times do |num1|
-      @length.times do |num2|
-        if @config[num1][num2].zero? && (not other.config[num1][num2].zero?)
-          diff = [num1, num2]
+    @length.times do |row|
+      @length.times do |col|
+        if @config[row][col].zero? && (not other.config[row][col].zero?)
+          diff = [row, col]
         end
       end
     end
@@ -80,7 +84,7 @@ class TicTacToeNode
   end
 
   def filled?
-    @config.flatten.select(&:zero?).empty?
+    @filled ||= @config.flatten.select(&:zero?).empty?
   end
 
   def winner?
@@ -91,7 +95,7 @@ class TicTacToeNode
     def row_completed?
       completed = false
       @config.each do |row|
-        completed = true if row.inject(0, :+).abs == row.length
+        completed = true if row.inject(0, :+).abs == @length
       end
       completed
     end
@@ -99,7 +103,7 @@ class TicTacToeNode
     def col_completed?
       completed = false
       @length.times do |num|
-        completed = true if @config.map{|row| row[num]}.inject(0, :+).abs == @length.times
+        completed = true if @config.map{|row| row[num]}.inject(0, :+).abs == @length
       end
       completed
     end
@@ -122,7 +126,7 @@ class TicTacToeGraph
   attr_reader :adjacency_list
   def initialize(grid_len, initial_config, mark)
     @adjacency_list = Hash.new { }
-    create_configurations!(initial_config, mark) #BFS SEARCH GRAPH
+    create_configurations!(initial_config, mark)
     get_descendants(@adjacency_list.keys[0])
   end
 
@@ -132,12 +136,13 @@ class TicTacToeGraph
     @adjacency_list[node].each do |child|
       winner = child if child.winner?
     end
-    new_node = winner || @adjacency_list[node].sort { |a,b| a.compare(b, @adjacency_list) }.first
+    new_node = winner || non_losing(node)
     get_move(node, new_node)
   end
 
 
   private
+  #BFS SEARCH GRAPH
   def create_configurations!(initial_config, mark)
     frontier = [TicTacToeNode.new(initial_config, mark)]
     until frontier.empty?
@@ -155,12 +160,15 @@ class TicTacToeGraph
   end
 
   def get_descendants(node)
+    return 0 if node.checked_descendants
+    node.checked_descendants = true
+
     if @adjacency_list[node].nil?
       return 0
     end
 
     @adjacency_list[node].each do |child|
-      if child.over?
+      if child.winner?
         node.num_winning_descendants += 1
       else
         get_descendants(child)
@@ -173,6 +181,21 @@ class TicTacToeGraph
 
   def get_move(old_node, new_node)
     old_node.extract_diff(new_node)
+  end
+
+  def non_losing(node)
+    is_non_losing = false
+    next_move = nil
+    @adjacency_list[node].sort { |a,b| a.compare(b, @adjacency_list) }.each do |move|
+      next unless @adjacency_list[move]
+
+      is_non_losing = @adjacency_list[move].select {|child| child.winner?}.empty?
+      if (is_non_losing)
+        next_move = move
+        break
+      end
+    end
+    next_move or @adjacency_list[node].first
   end
 end
 
